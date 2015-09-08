@@ -193,7 +193,7 @@ class JSONFiles:
                 f = open(tweet_dir + '/' + f, 'r')
 		for line in f:
 		    try:
-			tweet_json = json.loads(line.strip())
+			tweet_json = json.loads(line.strip().replace(r'\\"', r'\"'))
 		    except:
 			continue
 		    user_id = tweet_json['user']['id_str']
@@ -241,5 +241,5 @@ class JSONFiles:
         except ValueError:
             pass
             #logging.warn("Invalid line profile information at line %d of %s" % (index, path))
-        return result
+        return []
 
