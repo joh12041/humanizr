@@ -188,13 +188,18 @@ class JSONFiles:
 	if len(json_files) < 1:
 		logging.error('Empty tweet JSON directory.')
 		exit()
+	count_failed = 0
         for f in json_files:
 	    try:
                 f = open(tweet_dir + '/' + f, 'r')
 		for line in f:
 		    try:
-			tweet_json = json.loads(line.strip().replace(r'\\"', r'\"'))
+			try:
+			    tweet_json = json.loads(line.strip().replace(r'\\"', r'\"'))
+			except:
+			    tweet_json = json.loads(line.strip()[1:-1].replace('""','"'))
 		    except:
+			count_failed += 1
 			continue
 		    user_id = tweet_json['user']['id_str']
 		    label = 0
@@ -220,6 +225,7 @@ class JSONFiles:
 			max_count = len(self.tweets[uid])
 	print 'MAX NUMBER OF TWEETS FOR ONE USER: %d' % max_count
 	print 'NUMBER OF USERS: %d' % len(self.tweets)
+	print 'FAILED: %d' % count_failed
 
     def get_users_for_label(self, label):
         return self.profiles[label]
